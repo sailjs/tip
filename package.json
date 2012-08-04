@@ -1,0 +1,31 @@
+{
+  "name": "tip",
+  "version": "0.0.0",
+  "description": "Tip view.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sailjs/tip.git"
+  },
+  "bugs": {
+    "url": "http://github.com/sailjs/tip/issues"
+  },
+  "author": {
+    "name": "Jared Hanson",
+    "email": "jaredhanson@gmail.com",
+    "url": "http://www.jaredhanson.net/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "tip",
+  "amd": {},
+  "volo": {
+    "dependencies": {
+      "anchor": "github:anchorjs/anchor",
+      "view": "github:sailjs/view"
+    }
+  }
+}
