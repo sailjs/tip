@@ -12,6 +12,7 @@ function(View, sail, clazz) {
     Tip.super_.call(this, el, options);
     this.position('north');
     this.className = options.className || 'tip';
+    this._cselector = options.contentSelector || 'body';
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
   }
   clazz.inherits(Tip, View);
@@ -86,6 +87,11 @@ function(View, sail, clazz) {
     }
     return this;
   }
+  
+  Tip.prototype.content = function(el) {
+    this.el.find(this._cselector).empty().append(el);
+    return this;
+  };
   
   Tip.prototype.remove = function(){
     this.el.remove();
