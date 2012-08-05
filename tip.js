@@ -8,7 +8,9 @@ function(View, sail, clazz) {
   
   function Tip(el, options) {
     Tip.super_.call(this, el, options);
+    options = options || {};
     this.position('north');
+    this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
   }
   clazz.inherits(Tip, View);
   
@@ -16,6 +18,35 @@ function(View, sail, clazz) {
     this._position = type;
     return this;
   };
+  
+  Tip.prototype.hover = function(el, delay) {
+    el = sail.$(el); delay = delay || 0;
+    this._onmouseenterel = mouseenterel.bind(this);
+    this._onmouseleaveel = mouseleaveel.bind(this);
+    this._onmouseentertip = mouseentertip.bind(this);
+    this._onmouseleavetip = mouseleavetip.bind(this);
+    
+    // show tip on hover
+    el.on('mouseenter', this._onmouseenterel);
+    el.on('mouseleave', this._onmouseleaveel);
+    
+    // cancel hide on hover
+    this.el.on('mouseenter', this._onmouseentertip);
+    this.el.on('mouseleave', this._onmouseleavetip);
+    
+    function mouseenterel(e) { this.show(el); }
+    function mouseleaveel(e) { this.hide(delay); }
+    function mouseentertip(e) { this.cancelHide(); }
+    function mouseleavetip(e) { this.hide(delay); }
+  }
+  
+  Tip.prototype.unhover = function(el) {
+    el = sail.$(el);
+    el.off('mouseenter', this._onmouseenterel);
+    el.off('mouseleave', this._onmouseleaveel);
+    this.el.off('mouseenter', this._onmouseentertip);
+    this.el.off('mouseleave', this._onmouseleavetip);
+  }
   
   Tip.prototype.show = function(el) {
     if (!el) throw new Error('Tip.show() el argument required');
@@ -29,7 +60,39 @@ function(View, sail, clazz) {
     this._reposition = this.reposition.bind(this);
     sail.$(window).on('resize', this._reposition);
     sail.$(window).on('scroll', this._reposition);
+    return this;
   }
+  
+  Tip.prototype.hide = function(ms) {
+    var self = this;
+    
+    // duration
+    if (ms) {
+      this._hide = setTimeout(this.hide.bind(this), ms);
+      return this;
+    }
+    
+    // hide
+    this.emit('hide');
+    sail.$(window).off('scroll', this._reposition);
+    sail.$(window).off('resize', this._reposition);
+    this.el.addClass('tip-hide');
+    if (this._autoRemove) {
+      setTimeout(function() {
+        self.remove();
+      }, 10);
+    }
+    return this;
+  }
+  
+  Tip.prototype.remove = function(){
+    this.el.remove();
+    return this;
+  };
+  
+  Tip.prototype.cancelHide = function(){
+    clearTimeout(this._hide);
+  };
   
   
   /**
