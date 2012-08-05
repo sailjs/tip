@@ -7,9 +7,11 @@ function(View, sail, clazz) {
   //       minimal, non-jQuery DOM utilities (ex: Zepto, Bonzo, Anchor, etc.)
   
   function Tip(el, options) {
-    Tip.super_.call(this, el, options);
     options = options || {};
+    
+    Tip.super_.call(this, el, options);
     this.position('north');
+    this.className = options.className || 'tip';
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
   }
   clazz.inherits(Tip, View);
@@ -122,7 +124,7 @@ function(View, sail, clazz) {
     // FIXME: I suspect that there is a more elegant solution to preserving
     //        existing classes, in which case `className` and `_effect` can be
     //        removed.
-    this.el.attr('class', (this.className || '') + ' tip tip-' + name + ' ' + (this._effect || ''));
+    this.el.attr('class', this.className + ' ' + name + ' ' + (this._effect || ''));
   };
   
   /**
