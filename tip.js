@@ -120,9 +120,9 @@ function(View, sail, clazz) {
   Tip.prototype.replaceClass = function(name) {
     name = name.split(' ').join('-');
     // FIXME: I suspect that there is a more elegant solution to preserving
-    //        existing classes, in which case `classname` and `_effect` can be
+    //        existing classes, in which case `className` and `_effect` can be
     //        removed.
-    this.el.attr('class', (this.classname || '') + ' tip tip-' + name + ' ' + (this._effect || ''));
+    this.el.attr('class', (this.className || '') + ' tip tip-' + name + ' ' + (this._effect || ''));
   };
   
   /**
