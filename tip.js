@@ -1,7 +1,7 @@
 define(['view',
-        'sail',
-        'anchor/class'],
-function(View, sail, clazz) {
+        'class',
+        'sail'],
+function(View, clazz, sail) {
   
   // TODO: Ensure that the metrics functions used in this view are available in
   //       minimal, non-jQuery DOM utilities (ex: Zepto, Bonzo, Anchor, etc.)

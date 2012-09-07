@@ -23,9 +23,11 @@
   "main": "tip",
   "amd": {},
   "volo": {
+    "baseUrl": "vendor",
     "dependencies": {
-      "anchor": "github:anchorjs/anchor",
-      "view": "github:sailjs/view"
+      "class": "github:anchorjs/class/master",
+      "sail": "github:sailjs/sail/master",
+      "view": "github:sailjs/view/master"
     }
   }
 }
