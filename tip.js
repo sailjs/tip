@@ -11,6 +11,7 @@ function(View, clazz, sail) {
     Tip.super_.call(this, el, options);
     this.className = options.className || 'tip';
     this._csel = options.contentSelector || '.body';
+    this._fixed = options.fixed || false;
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
     this.position(options.position || 'north');
   }
@@ -111,10 +112,11 @@ function(View, clazz, sail) {
   Tip.prototype.reposition = function() {
     var pos = this._position;
     var off = this.offset(pos);
-    var newpos = this.suggested(pos, off);
+    var newpos = this._fixed ? pos : this.suggested(pos, off);
     if (newpos) off = this.offset(pos = newpos);
+    var adj = this.adjust(pos, off);
     this.replaceClass(pos);
-    this.el.css(off);
+    this.el.css({ top: off.top + adj.top, left: off.left + adj.left });
   };
   
   /**
@@ -182,6 +184,33 @@ function(View, clazz, sail) {
         throw new Error('invalid position "' + pos + '"');
     }
   };
+  
+  Tip.prototype.adjust = function(pos, off) {
+    var el = this.el;
+    var ew = el.outerWidth();
+    var eh = el.outerHeight();
+    
+    var win = sail.$(window);
+    var top = win.scrollTop();
+    var left = win.scrollLeft();
+    var w = win.width();
+    var h = win.height();
+    
+    // TODO: Implement support for adjusting other positions.
+    
+    switch (pos) {
+      case 'south':
+        return {
+          top: 0,
+          left: off.left + ew > w ? 0 - (off.left + ew - w) - 12 : 0
+        }
+      default:
+        return {
+          top: 0,
+          left: 0
+        }
+    }
+  }
   
   /**
    * Compute the "suggested" position favouring `pos`.
