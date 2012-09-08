@@ -9,9 +9,11 @@ function(View, clazz, sail) {
   function Tip(el, options) {
     options = options || {};
     Tip.super_.call(this, el, options);
+    this.arrowEl = this.el.find(options.arrowSelector || '.arrow');
     this.className = options.className || 'tip';
     this._csel = options.contentSelector || '.body';
     this._fixed = options.fixed || false;
+    this._padj = { top: 0, left: 0 };
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
     this.position(options.position || 'north');
   }
@@ -117,6 +119,13 @@ function(View, clazz, sail) {
     var adj = this.adjust(pos, off);
     this.replaceClass(pos);
     this.el.css({ top: off.top + adj.top, left: off.left + adj.left });
+    if (adj.top || adj.left) {
+      var ael = this.arrowEl;
+      var ao = ael.offset();
+      var padj = this._padj;
+      ael.offset({ top: ao.top + padj.top - adj.top, left: ao.left + padj.left - adj.left });
+      this._padj = adj;
+    }
   };
   
   /**
