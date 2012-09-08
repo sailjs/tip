@@ -8,16 +8,20 @@ function(View, clazz, sail) {
   
   function Tip(el, options) {
     options = options || {};
-    
     Tip.super_.call(this, el, options);
-    this.position('north');
     this.className = options.className || 'tip';
-    this._cselector = options.contentSelector || 'body';
+    this._csel = options.contentSelector || '.body';
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
+    this.position(options.position || 'north');
   }
   clazz.inherits(Tip, View);
   
-  Tip.prototype.position = function(type){
+  Tip.prototype.content = function(el) {
+    this.el.find(this._csel).empty().append(el);
+    return this;
+  };
+  
+  Tip.prototype.position = function(type) {
     this._position = type;
     return this;
   };
@@ -52,14 +56,13 @@ function(View, clazz, sail) {
   }
   
   Tip.prototype.show = function(el) {
-    if (!el) throw new Error('Tip.show() el argument required');
+    if (!el) throw new Error('Tip.show() element required');
     this.target = sail.$(el);
-    
     this.emit('show', this.target);
     this.el.appendTo(document.body);
     this.el.addClass('tip-' + this._position);
     this.reposition();
-    this.el.removeClass('tip-hide');
+    this.el.removeClass('hide');
     this._reposition = this.reposition.bind(this);
     sail.$(window).on('resize', this._reposition);
     sail.$(window).on('scroll', this._reposition);
@@ -67,8 +70,6 @@ function(View, clazz, sail) {
   }
   
   Tip.prototype.hide = function(ms) {
-    var self = this;
-    
     // duration
     if (ms) {
       this._hide = setTimeout(this.hide.bind(this), ms);
@@ -79,8 +80,9 @@ function(View, clazz, sail) {
     this.emit('hide');
     sail.$(window).off('scroll', this._reposition);
     sail.$(window).off('resize', this._reposition);
-    this.el.addClass('tip-hide');
+    this.el.addClass('hide');
     if (this._autoRemove) {
+      var self = this;
       setTimeout(function() {
         self.remove();
       }, 10);
@@ -88,18 +90,15 @@ function(View, clazz, sail) {
     return this;
   }
   
-  Tip.prototype.content = function(el) {
-    this.el.find(this._cselector).empty().append(el);
-    return this;
-  };
-  
-  Tip.prototype.remove = function(){
+  Tip.prototype.remove = function() {
     this.el.remove();
     return this;
   };
   
-  Tip.prototype.cancelHide = function(){
+  Tip.prototype.cancelHide = function() {
+    if (!this._hide) return;
     clearTimeout(this._hide);
+    delete this._hide;
   };
   
   
@@ -119,22 +118,7 @@ function(View, clazz, sail) {
   };
   
   /**
-   * Replace position class `name`.
-   *
-   * @param {String} name
-   * @api private
-   */
-
-  Tip.prototype.replaceClass = function(name) {
-    name = name.split(' ').join('-');
-    // FIXME: I suspect that there is a more elegant solution to preserving
-    //        existing classes, in which case `className` and `_effect` can be
-    //        removed.
-    this.el.attr('class', this.className + ' ' + name + ' ' + (this._effect || ''));
-  };
-  
-  /**
-   * Compute the offset for `.target`
+   * Compute the offset for `.el`, relative to `.target`,
    * based on the given `pos`.
    *
    * @param {String} pos
@@ -232,6 +216,18 @@ function(View, clazz, sail) {
 
     // too far to the left
     if (off.left < left) return 'east';
+  };
+  
+  /**
+   * Replace position class `name`.
+   *
+   * @param {String} name
+   * @api private
+   */
+
+  Tip.prototype.replaceClass = function(pos) {
+    pos = pos.split(' ').join('-');
+    this.el.attr('class', this.className + ' ' + pos + ' ' + (this._effect || ''));
   };
   
   return Tip;
