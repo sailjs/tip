@@ -29,8 +29,9 @@ function(View, clazz, sail) {
     return this;
   };
   
-  Tip.prototype.hover = function(el, delay) {
+  Tip.prototype.attach = function(el, delay) {
     el = sail.$(el); delay = delay || 0;
+    this._attachedTo = el;
     this._onmouseenterel = mouseenterel.bind(this);
     this._onmouseleaveel = mouseleaveel.bind(this);
     this._onmouseentertip = mouseentertip.bind(this);
@@ -50,12 +51,12 @@ function(View, clazz, sail) {
     function mouseleavetip(e) { this.hide(delay); }
   }
   
-  Tip.prototype.unhover = function(el) {
-    el = sail.$(el);
-    el.off('mouseenter', this._onmouseenterel);
-    el.off('mouseleave', this._onmouseleaveel);
+  Tip.prototype.unattach = function() {
+    this._attachedTo.off('mouseenter', this._onmouseenterel);
+    this._attachedTo.off('mouseleave', this._onmouseleaveel);
     this.el.off('mouseenter', this._onmouseentertip);
     this.el.off('mouseleave', this._onmouseleavetip);
+    delete this._attachedTo;
   }
   
   Tip.prototype.show = function(el) {
@@ -94,6 +95,10 @@ function(View, clazz, sail) {
   }
   
   Tip.prototype.remove = function() {
+    if (this._attachedTo) {
+      this.el.detach();
+      return this;
+    }
     this.el.remove();
     return this;
   };
