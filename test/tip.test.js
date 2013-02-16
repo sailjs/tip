@@ -1,7 +1,5 @@
-define(['tip/tip',
-        'chai'],
-function(Tip, chai) {
-  var expect = chai.expect;
+define(['tip'],
+function(Tip) {
 
   describe("tip", function() {
     

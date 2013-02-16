@@ -1,0 +1,13 @@
+{
+  "volo": {
+    "baseUrl": "js/lib",
+    "dependencies": {
+      "require": "github:jrburke/requirejs/2.0.6",
+      "class": "github:anchorjs/class/master",
+      "render": "github:sailjs/render/master",
+      "view": "github:sailjs/view/master",
+      "mocha": "github:visionmedia/mocha/1.4.2",
+      "chai": "github:chaijs/chai/1.2.0"
+    }
+  }
+}
