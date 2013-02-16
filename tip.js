@@ -1,7 +1,7 @@
 define(['view',
-        'class',
-        'sail'],
-function(View, clazz, sail) {
+        'render',
+        'class'],
+function(View, render, clazz) {
   
   // TODO: Ensure that the metrics functions used in this view are available in
   //       minimal, non-jQuery DOM utilities (ex: Zepto, Bonzo, Anchor, etc.)
@@ -30,7 +30,7 @@ function(View, clazz, sail) {
   };
   
   Tip.prototype.attach = function(el, delay) {
-    el = sail.$(el); delay = delay || 0;
+    el = render.$(el); delay = delay || 0;
     this._attachedTo = el;
     this._onmouseenterel = mouseenterel.bind(this);
     this._onmouseleaveel = mouseleaveel.bind(this);
@@ -61,15 +61,15 @@ function(View, clazz, sail) {
   
   Tip.prototype.show = function(el) {
     if (!el) throw new Error('Tip.show() element required');
-    this.target = sail.$(el);
+    this.target = render.$(el);
     this.emit('show', this.target);
     this.el.appendTo(document.body);
     this.el.addClass('tip-' + this._position);
     this.reposition();
     this.el.removeClass('hide');
     this._reposition = this.reposition.bind(this);
-    sail.$(window).on('resize', this._reposition);
-    sail.$(window).on('scroll', this._reposition);
+    render.$(window).on('resize', this._reposition);
+    render.$(window).on('scroll', this._reposition);
     return this;
   }
   
@@ -82,8 +82,8 @@ function(View, clazz, sail) {
     
     // hide
     this.emit('hide');
-    sail.$(window).off('scroll', this._reposition);
-    sail.$(window).off('resize', this._reposition);
+    render.$(window).off('scroll', this._reposition);
+    render.$(window).off('resize', this._reposition);
     this.el.addClass('hide');
     if (this._autoRemove) {
       var self = this;
@@ -204,7 +204,7 @@ function(View, clazz, sail) {
     var ew = el.outerWidth();
     var eh = el.outerHeight();
     
-    var win = sail.$(window);
+    var win = render.$(window);
     var top = win.scrollTop();
     var left = win.scrollLeft();
     var w = win.width();
@@ -242,7 +242,7 @@ function(View, clazz, sail) {
     var ew = el.outerWidth();
     var eh = el.outerHeight();
 
-    var win = sail.$(window);
+    var win = render.$(window);
     var top = win.scrollTop();
     var left = win.scrollLeft();
     var w = win.width();

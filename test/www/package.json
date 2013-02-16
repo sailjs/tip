@@ -7,7 +7,10 @@
       "render": "github:sailjs/render/master",
       "view": "github:sailjs/view/master",
       "mocha": "github:visionmedia/mocha/1.4.2",
-      "chai": "github:chaijs/chai/1.2.0"
+      "chai": "github:chaijs/chai/1.2.0",
+      "selector": "github:anchorjs/selector/master",
+      "dom": "github:anchorjs/dom/master",
+      "events": "github:anchorjs/events/master"
     }
   }
 }
