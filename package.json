@@ -21,12 +21,17 @@
     }
   ],
   "main": "tip",
-  "amd": {},
+  "devDependencies": {
+    "mocha-phantomjs": "1.x.x",
+    "mocha-cloud": "0.0.1",
+    "term-canvas": "0.0.5",
+    "mocha-cloud-grid-view": "0.0.1",
+    "express": "3.x.x"
+  },
   "volo": {
-    "baseUrl": "vendor",
     "dependencies": {
       "class": "github:anchorjs/class/master",
-      "sail": "github:sailjs/sail/master",
+      "render": "github:sailjs/render/master",
       "view": "github:sailjs/view/master"
     }
   }
