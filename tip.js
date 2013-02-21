@@ -11,7 +11,7 @@ function(View, render, clazz) {
     Tip.super_.call(this, el, options);
     this.arrowEl = this.el.find(options.arrowSelector || '.arrow');
     this.className = options.className || 'tip';
-    this._csel = options.contentSelector || '.body';
+    this._bodySel = options.bodySelector || options.contentSelector || '.body';
     this._fixed = options.fixed || false;
     this._padj = { top: 0, left: 0 };
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
@@ -19,8 +19,9 @@ function(View, render, clazz) {
   }
   clazz.inherits(Tip, View);
   
+  Tip.prototype.body =
   Tip.prototype.content = function(el) {
-    this.el.find(this._csel).empty().append(el);
+    this.el.find(this._bodySel).empty().append(el);
     return this;
   };
   
@@ -89,6 +90,7 @@ function(View, render, clazz) {
       var self = this;
       setTimeout(function() {
         self.remove();
+        self.dispose();
       }, 10);
     }
     return this;
@@ -99,8 +101,7 @@ function(View, render, clazz) {
       this.el.detach();
       return this;
     }
-    this.el.remove();
-    return this;
+    return Tip.super_.prototype.remove.call(this);
   };
   
   Tip.prototype.cancelHide = function() {
