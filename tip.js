@@ -96,18 +96,18 @@ function(View, render, clazz) {
     return this;
   }
   
+  Tip.prototype.cancelHide = function() {
+    if (!this._hide) return;
+    clearTimeout(this._hide);
+    delete this._hide;
+  };
+  
   Tip.prototype.remove = function() {
     if (this._attachedTo) {
       this.el.detach();
       return this;
     }
     return Tip.super_.prototype.remove.call(this);
-  };
-  
-  Tip.prototype.cancelHide = function() {
-    if (!this._hide) return;
-    clearTimeout(this._hide);
-    delete this._hide;
   };
   
   
